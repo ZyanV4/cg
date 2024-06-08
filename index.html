@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #chat-container {
+            width: 500px;
+            max-width: 100%;
+        }
+
+        #chat-window {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 400px;
+            overflow-y: scroll;
+            background: white;
+        }
+
+        #output {
+            margin-bottom: 20px;
+        }
+
+        #message, #username, #send {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+        }
+
+        #send {
+            background: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat-container">
+        <div id="chat-window">
+            <div id="output"></div>
+            <div id="feedback"></div>
+        </div>
+        <input id="username" type="text" placeholder="Enter your name">
+        <input id="message" type="text" placeholder="Enter message">
+        <button id="send">Send</button>
+    </div>
+
+    <script>
+        const socket = new WebSocket('wss://echo.websocket.org');
+
+        const message = document.getElementById('message');
+        const username = document.getElementById('username');
+        const send = document.getElementById('send');
+        const output = document.getElementById('output');
+        const feedback = document.getElementById('feedback');
+
+        socket.addEventListener('open', () => {
+            console.log('Connected to the WebSocket server');
+        });
+
+        send.addEventListener('click', () => {
+            if (username.value && message.value) {
+                const data = {
+                    username: username.value,
+                    message: message.value
+                };
+                socket.send(JSON.stringify(data));
+                message.value = '';
+            } else {
+                alert('Please enter both username and message');
+            }
+        });
+
+        message.addEventListener('keypress', () => {
+            if (username.value) {
+                feedback.innerHTML = '<p><em>' + username.value + ' is typing a message...</em></p>';
+            }
+        });
+
+        socket.addEventListener('message', (event) => {
+            const data = JSON.parse(event.data);
+            feedback.innerHTML = '';
+            output.innerHTML += '<p><strong>' + data.username + ':</strong> ' + data.message + '</p>';
+        });
+
+        socket.addEventListener('close', () => {
+            console.log('Disconnected from the WebSocket server');
+        });
+    </script>
+</body>
+</html>
