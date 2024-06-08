@@ -45,30 +45,35 @@
             cursor: pointer;
         }
     </style>
-</head>
-<body>
-    <div id="chat-container">
-        <div id="chat-window">
-            <div id="output"></div>
-            <div id="feedback"></div>
-        </div>
-        <input id="username" type="text" placeholder="Enter your name">
-        <input id="message" type="text" placeholder="Enter message">
-        <button id="send">Send</button>
-    </div>
+    <!-- Tambahkan Firebase SDK -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+        import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-    <script>
-        const socket = new WebSocket('wss://echo.websocket.org');
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBbbSrAKPDZccp5Cj5yUFQZWaU5g4irEYA",
+            authDomain: "global-chat-526ec.firebaseapp.com",
+            projectId: "global-chat-526ec",
+            storageBucket: "global-chat-526ec.appspot.com",
+            messagingSenderId: "974406552674",
+            appId: "1:974406552674:web:7423d0813a675ada28953b",
+            measurementId: "G-9BQWE43K1C"
+        };
 
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const database = getDatabase(app);
+
+        // DOM Elements
         const message = document.getElementById('message');
         const username = document.getElementById('username');
         const send = document.getElementById('send');
         const output = document.getElementById('output');
         const feedback = document.getElementById('feedback');
-
-        socket.addEventListener('open', () => {
-            console.log('Connected to the WebSocket server');
-        });
 
         send.addEventListener('click', () => {
             if (username.value && message.value) {
@@ -76,7 +81,7 @@
                     username: username.value,
                     message: message.value
                 };
-                socket.send(JSON.stringify(data));
+                push(ref(database, 'messages'), data);
                 message.value = '';
             } else {
                 alert('Please enter both username and message');
@@ -89,15 +94,22 @@
             }
         });
 
-        socket.addEventListener('message', (event) => {
-            const data = JSON.parse(event.data);
+        onChildAdded(ref(database, 'messages'), (snapshot) => {
+            const data = snapshot.val();
             feedback.innerHTML = '';
             output.innerHTML += '<p><strong>' + data.username + ':</strong> ' + data.message + '</p>';
         });
-
-        socket.addEventListener('close', () => {
-            console.log('Disconnected from the WebSocket server');
-        });
     </script>
+</head>
+<body>
+    <div id="chat-container">
+        <div id="chat-window">
+            <div id="output"></div>
+            <div id="feedback"></div>
+        </div>
+        <input id="username" type="text" placeholder="Enter your name">
+        <input id="message" type="text" placeholder="Enter message">
+        <button id="send">Send</button>
+    </div>
 </body>
 </html>
