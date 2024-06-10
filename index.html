@@ -260,6 +260,7 @@
         const cancelReplyButton = document.getElementById('cancel-reply');
 
         let replyMessageId = null;
+        let replyMessageData = null;
 
         // Check if username exists in localStorage
         const username = localStorage.getItem('username');
@@ -316,11 +317,12 @@
                 const data = {
                     username: localStorage.getItem('username'),
                     message: messageInput.value,
-                    replyTo: replyMessageId
+                    replyTo: replyMessageData
                 };
                 push(ref(database, 'messages'), data);
                 messageInput.value = '';
                 replyMessageId = null;
+                replyMessageData = null;
                 replyContainer.style.display = 'none';
             } else {
                 alert('Please enter a message');
@@ -346,6 +348,7 @@
 
                 messageElement.addEventListener('click', () => {
                     replyMessageId = childSnapshot.key;
+                    replyMessageData = { message: data.message, username: data.username };
                     replyMessageElement.innerText = 'Replying to: ' + data.message;
                     replyContainer.style.display = 'block';
                 });
@@ -371,6 +374,7 @@
 
             messageElement.addEventListener('click', () => {
                 replyMessageId = snapshot.key;
+                replyMessageData = { message: data.message, username: data.username };
                 replyMessageElement.innerText = 'Replying to: ' + data.message;
                 replyContainer.style.display = 'block';
             });
@@ -381,6 +385,7 @@
         // Cancel reply
         cancelReplyButton.addEventListener('click', () => {
             replyMessageId = null;
+            replyMessageData = null;
             replyContainer.style.display = 'none';
         });
 
