@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Global Chat</title>
+    <link rel="shortcut icon" href="https://zyanv4.my.id/assets/images/1701690928_3605654cb14eef283384.png">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,7 +15,20 @@
             height: 100vh;
             margin: 0;
         }
-
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url(https://zyanv4.my.id/assets/images/UNGU.jpg);
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            filter: brightness(.4);
+            z-index: -1;
+        }
         #chat-container {
             width: 90%;
             max-width: 800px;
