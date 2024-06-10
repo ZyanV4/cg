@@ -213,7 +213,7 @@
             background: var(--warna_4);
             padding: 10px;
             border-radius: 8px;
-            margin-bottom: 10px;
+            margin-left: 10px;
             color: white;
         }
 
@@ -228,6 +228,11 @@
             color: red;
         }
 
+        /* Reply button */
+        #reply-button {
+            cursor: pointer;
+            margin-left: 10px;
+        }
     </style>
     <!-- Tambahkan Firebase SDK -->
     <script type="module">
@@ -258,6 +263,7 @@
         const replyContainer = document.getElementById('reply-container');
         const replyMessageElement = document.getElementById('reply-message');
         const cancelReplyButton = document.getElementById('cancel-reply');
+        const replyButton = document.getElementById('reply-button');
 
         let replyMessageId = null;
         let replyMessageData = null;
@@ -389,6 +395,11 @@
             replyContainer.style.display = 'none';
         });
 
+        // Show reply container on SVG click
+        replyButton.addEventListener('click', () => {
+            replyContainer.style.display = replyContainer.style.display === 'block' ? 'none' : 'block';
+        });
+
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js" type="text/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
@@ -406,12 +417,15 @@
                     <div id="output"></div>
                 </div>
                 <div id="input-container">
+                    <input id="message" type="text" placeholder="Enter message">
+                    <button id="kirim">kirim</button>
                     <div id="reply-container" class="reply-container">
                         <span id="reply-message" class="reply-message"></span>
                         <span id="cancel-reply" class="cancel-reply">Cancel</span>
                     </div>
-                    <input id="message" type="text" placeholder="Enter message">
-                    <button id="kirim">kirim</button>
+                    <svg id="reply-button" viewBox="0 0 25 25" height="25" width="25" preserveAspectRatio="xMidYMid meet" class="" version="1.1" x="0px" y="0px" enable-background="new 0 0 25 25">
+                        <path fill-rule="evenodd" clip-rule="evenodd" fill="currentColor" d="M14.248,6.973c0-0.614,0.741-0.921,1.174-0.488l5.131,5.136 c0.269,0.269,0.269,0.704,0,0.973l-5.131,5.136c-0.433,0.433-1.174,0.126-1.174-0.488v-2.319c-4.326,0-7.495,1.235-9.85,3.914 c-0.209,0.237-0.596,0.036-0.511-0.268c1.215-4.391,4.181-8.492,10.361-9.376V6.973z"></path>
+                    </svg>
                 </div>
             </div>
             <div id="username-container" style="display: none;">
