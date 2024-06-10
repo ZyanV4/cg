@@ -10,6 +10,125 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
     <style>
+        :root {
+            --warna: #383c3d;
+            --warna_2: #0a0c14;
+            --warna_3: #9b02fc;
+            --warna_4: #0f111c;
+            --warna_5: #191e31;
+            --warna_6: #2f107c;
+            --warna_7: rgba(18, 18, 18, 1);
+            --warna_8: linear-gradient(90deg, hsla(0,0%,0%,0), hsl(210,4%,64%), hsla(0,0%,0%,0));
+            --warna_9: #252525;
+            --warna_10: #454545;
+            --warna_11: #222;
+            --warna_12: #333;
+            --warna_13: #1c1c1c;
+            --warna_14: #008ef0;
+            --warna_15: linear-gradient(45deg, var(--warna_3) 35%, var(--warna_14));
+            --warna_16: linear-gradient(45deg, #9b02fcad 35%, #008ef0ad);
+            --warna_17: #2d2d2d;
+            --warna_18: #353535;
+            --warna_19: #717171;
+            --warna_20: #ddd;
+            --warna_21: #262432;
+            --warna_22: #580190;
+            
+            --bs-00: 0 0 0rem #000;
+            --bs-01: 0 0 0.1rem #000;
+            --bs-02: 0 0 0.2rem #000;
+            --bs-03: 0 0 0.3rem #000;
+            --bs-04: 0 0 0.4rem #000;
+            --bs-05: 0 0 0.5rem #000;
+            --bs-06: 0 0 0.6rem #000;
+            --bs-07: 0 0 0.7rem #000;
+            --bs-08: 0 0 0.8rem #000;
+            --bs-09: 0 0 0.9rem #000;
+            --bs-1: 0 0 1rem #000;
+            
+            --tw-border-spacing-x: 0;
+            --tw-border-spacing-y: 0;
+            --tw-translate-x: 0;
+            --tw-translate-y: 0;
+            --tw-rotate: 0;
+            --tw-skew-x: 0;
+            --tw-skew-y: 0;
+            --tw-scale-x: 1;
+            --tw-scale-y: 1;
+            
+            --header-color: 265 60% 11%;
+            --footer-color: 0 0% 9%;
+            --text-color: 0 0% 100%;
+            --text-color-foreground: 0 0% 100%;
+            --bg-color: 0 0% 11%;
+            --bg-gradient-from: 0 0% 11%;
+            --bg-gradient-via: 0 0% 11%;
+            --bg-gradient-to: 0 0% 11%;
+            --primary-50: 218.4 100% 95.1%;
+            --primary-100: 216.73469387755102 96.1% 90%;
+            --primary-200: 217.20000000000002 98% 80%;
+            --primary-300: 217.04697986577182 97.39999999999999% 70%;
+            --primary-400: 216.9 98% 60%;
+            --primary-500: 217.165991902834 97.6% 50.4%;
+            --primary-600: 216.89999999999998 98% 40%;
+            --primary-700: 217.04697986577182 97.39999999999999% 30%;
+            --primary-800: 217.20000000000002 98% 20%;
+            --primary-900: 216.734693877551 96.1% 10%;
+            --secondary-50: 0 0% 92.9%;
+            --secondary-100: 0 0% 87.1%;
+            --secondary-200: 0 0% 72.89999999999999%;
+            --secondary-300: 0 0% 60%;
+            --secondary-400: 0 0% 45.9%;
+            --secondary-500: 0 0% 32.5%;
+            --secondary-600: 0 0% 25.900000000000002%;
+            --secondary-700: 0 0% 20%;
+            --secondary-800: 0 0% 12.9%;
+            --secondary-900: 0 0% 7.1%;
+            --tw-border-spacing-x: 0;
+            --tw-border-spacing-y: 0;
+            --tw-translate-x: 0;
+            --tw-translate-y: 0;
+            --tw-rotate: 0;
+            --tw-skew-x: 0;
+            --tw-skew-y: 0;
+            --tw-scale-x: 1;
+            --tw-scale-y: 1;
+            --tw-pan-x: ;
+            --tw-pan-y: ;
+            --tw-pinch-zoom: ;
+            --tw-scroll-snap-strictness: proximity;
+            --tw-ordinal: ;
+            --tw-slashed-zero: ;
+            --tw-numeric-figure: ;
+            --tw-numeric-spacing: ;
+            --tw-numeric-fraction: ;
+            --tw-ring-inset: ;
+            --tw-ring-offset-width: 0px;
+            --tw-ring-offset-color: #fff;
+            --tw-ring-color: rgba(59,130,246,.5);
+            --tw-ring-offset-shadow: 0 0 #0000;
+            --tw-ring-shadow: 0 0 #0000;
+            --tw-shadow: 0 0 #0000;
+            --tw-shadow-colored: 0 0 #0000;
+            --tw-blur: ;
+            --tw-brightness: ;
+            --tw-contrast: ;
+            --tw-grayscale: ;
+            --tw-hue-rotate: ;
+            --tw-invert: ;
+            --tw-saturate: ;
+            --tw-sepia: ;
+            --tw-drop-shadow: ;
+            --tw-backdrop-blur: ;
+            --tw-backdrop-brightness: ;
+            --tw-backdrop-contrast: ;
+            --tw-backdrop-grayscale: ;
+            --tw-backdrop-hue-rotate: ;
+            --tw-backdrop-invert: ;
+            --tw-backdrop-opacity: ;
+            --tw-backdrop-saturate: ;
+            --tw-backdrop-sepia: ;
+        }
         body, html {
             font-family: 'Poppins', sans-serif;
             -webkit-font-smoothing: antialiased;
@@ -23,6 +142,7 @@
             margin: 0;
             font-size: 14px;
             letter-spacing: .5px;
+            caret-color: var(--warna_3) !important;
         }
         body::before {
             content: "";
@@ -37,6 +157,28 @@
             background-size: cover;
             filter: brightness(.4);
             z-index: -1;
+        }
+        ::selection {
+            background: var(--warna_3);
+            color: #fff;
+        }
+        /* width */
+        ::-webkit-scrollbar {
+            width: 7px;
+            height: 12px;
+        }
+        /* Track */
+        ::-webkit-scrollbar-track {
+            background: var(--warna_16); 
+        }
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: var(--warna_3);
+            height: 32px;
+        }
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--warna_3); 
         }
         .chatsection {
             display: flex;
