@@ -230,27 +230,42 @@
         #input-container {
             display: flex;
             border-top: 1px solid transparent;
-            background: radial-gradient(36.25% 101.21% at 50% 100%, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0) 100%), black;
+            background: #353535;
             padding: 10px;
         }
 
-        #message, #username, #send {
-            padding: 10px;
+        #message, #username {
+            padding: 10px 15px;
             margin: 5px;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
         }
-
+        #username {
+            flex: 1;
+            border: 1px solid var(--body_background);
+            background: var(--body_background);
+            color: white;
+        }
         #message {
             flex: 1;
-            border: 1px solid #ccc;
+            border: 1px solid var(--body_background);
+            background: var(--body_background);
+            color: white;
         }
 
-        #send {
-            background: #34b7f1;
+        #kirim {
             color: white;
             cursor: pointer;
             border: none;
+            filter: drop-shadow(0px 0px 37.6px var(--warna_3));
+            background: var(--warna_3);
+            border-color: var(--warna_3);
+            font-size: .875rem;
+            text-transform: capitalize;
+            border-radius: 8px;
+            box-shadow: 0px 0px 20.6px var(--warna_3);
+            font-weight: 700;
+            padding: 10px 25px;
         }
     </style>
     <!-- Tambahkan Firebase SDK -->
@@ -266,7 +281,7 @@
             databaseURL: "https://global-chat-526ec-default-rtdb.asia-southeast1.firebasedatabase.app",
             projectId: "global-chat-526ec",
             storageBucket: "global-chat-526ec.appspot.com",
-            messagingSenderId: "974406552674",
+            messagingkirimerId: "974406552674",
             appId: "1:974406552674:web:7423d0813a675ada28953b",
             measurementId: "G-9BQWE43K1C"
         };
@@ -278,11 +293,11 @@
         // DOM Elements
         const messageInput = document.getElementById('message');
         const usernameInput = document.getElementById('username');
-        const sendButton = document.getElementById('send');
+        const kirimButton = document.getElementById('kirim');
         const output = document.getElementById('output');
 
-        // Send message to Firebase
-        sendButton.addEventListener('click', () => {
+        // kirim message to Firebase
+        kirimButton.addEventListener('click', () => {
             if (usernameInput.value && messageInput.value) {
                 const data = {
                     username: usernameInput.value,
@@ -336,7 +351,7 @@
                 <div id="input-container">
                     <input id="username" type="text" placeholder="Enter your name">
                     <input id="message" type="text" placeholder="Enter message">
-                    <button id="send">Send</button>
+                    <button id="kirim">kirim</button>
                 </div>
             </div>
         </section>
