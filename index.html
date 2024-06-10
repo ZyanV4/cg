@@ -35,6 +35,10 @@
             --warna_22: #580190;
 
             --body_background: #0f0f0f;
+            --navbar_background: #fff;
+            --section_background: #1a1a1a;
+            --accordion_button: #272727;
+            --sidebar_items: #363636;
             
             --bs-00: 0 0 0rem #000;
             --bs-01: 0 0 0.1rem #000;
@@ -185,7 +189,6 @@
             max-height: 600px;
             display: flex;
             flex-direction: column;
-            background: #ffffff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
             overflow: hidden;
@@ -196,7 +199,7 @@
             flex: 1;
             padding: 20px;
             overflow-y: scroll;
-            background: #e5ddd5;
+            background: var(--section_background);
         }
 
         #output {
@@ -219,7 +222,8 @@
 
         .message.other {
             align-self: flex-start;
-            background: #ffffff;
+            background: radial-gradient(36.25% 101.21% at 50% 100%, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0) 100%), black;
+            color: white;
         }
 
         #input-container {
