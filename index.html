@@ -3,85 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Chat</title>
+    <title>Global Chat - WhatsApp Web Clone</title>
     <style>
+        /* styles.css */
         body {
+            margin: 0;
             font-family: Arial, sans-serif;
-            background: #ece5dd;
+            background-color: #131c21;
+            color: #fff;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
-        }
-
-        #chat-container {
-            width: 90%;
-            max-width: 800px;
-            height: 90vh;
-            max-height: 600px;
-            display: flex;
-            flex-direction: column;
-            background: #ffffff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
             overflow: hidden;
         }
 
-        #chat-window {
-            flex: 1;
-            padding: 20px;
-            overflow-y: scroll;
-            background: #e5ddd5;
+        .container {
+            display: flex;
+            height: 95vh;
+            width: 90vw;
+            max-width: 1200px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
-        #output {
+        .sidebar {
+            width: 30%;
+            background-color: #2a2f32;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #1c252b;
+        }
+
+        .search-bar {
+            padding: 10px;
+            background-color: #131c21;
+            border-bottom: 1px solid #1c252b;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 20px;
+            background-color: #323739;
+            color: #fff;
+            outline: none;
+        }
+
+        .contacts {
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .contact {
+            display: flex;
+            padding: 10px 15px;
+            border-bottom: 1px solid #1c252b;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .contact:hover {
+            background-color: #323739;
+        }
+
+        .contact.active {
+            background-color: #323739;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background-color: #666;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .contact-info h4 {
+            margin: 0;
+            font-size: 16px;
+            color: #fff;
+        }
+
+        .contact-info p {
+            margin: 0;
+            font-size: 14px;
+            color: #b1b3b5;
+        }
+
+        .chat-window {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #0d1418;
+            background-image: url('background-pattern.png');
+        }
+
+        .chat-header {
+            padding: 15px;
+            background-color: #2a2f32;
+            border-bottom: 1px solid #1c252b;
+            display: flex;
+            align-items: center;
+        }
+
+        .chat-header h4 {
+            margin: 0;
+            font-size: 18px;
+            color: #fff;
+        }
+
+        .messages {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
             display: flex;
             flex-direction: column;
         }
 
         .message {
             margin-bottom: 15px;
-            padding: 10px;
-            border-radius: 5px;
-            max-width: 70%;
-            word-wrap: break-word;
+            max-width: 60%;
+            padding: 10px 15px;
+            border-radius: 8px;
+            position: relative;
         }
 
-        .message.user {
-            align-self: flex-end;
-            background: #dcf8c6;
-        }
-
-        .message.other {
+        .message.received {
+            background-color: #323739;
             align-self: flex-start;
-            background: #ffffff;
         }
 
-        #input-container {
+        .message.sent {
+            background-color: #056162;
+            align-self: flex-end;
+        }
+
+        .message span {
+            font-size: 12px;
+            position: absolute;
+            bottom: -15px;
+            right: 10px;
+            color: #b1b3b5;
+        }
+
+        .message-input {
             display: flex;
-            border-top: 1px solid #ccc;
-            background: #f8f8f8;
-            padding: 10px;
+            padding: 15px;
+            background-color: #2a2f32;
+            border-top: 1px solid #1c252b;
         }
 
-        #message, #username, #send {
-            padding: 10px;
-            margin: 5px;
+        .message-input input {
+            flex-grow: 1;
+            padding: 10px 15px;
             border: none;
-            border-radius: 5px;
+            border-radius: 20px;
+            background-color: #323739;
+            color: #fff;
+            margin-right: 10px;
+            outline: none;
         }
 
-        #message {
-            flex: 1;
-            border: 1px solid #ccc;
-        }
-
-        #send {
-            background: #34b7f1;
-            color: white;
+        .message-input button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            background-color: #056162;
+            color: #fff;
             cursor: pointer;
-            border: none;
+            transition: background-color 0.3s;
+        }
+
+        .message-input button:hover {
+            background-color: #075e54;
+        }
+
+        video {
+            max-width: 100%;
+            border-radius: 8px;
         }
     </style>
     <!-- Tambahkan Firebase SDK -->
@@ -92,9 +200,9 @@
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
-            apiKey: "AIzaSyBbbSrAKPDZccp5Cj5YUFQZWaU5g4irEYA",
+            apiKey: "AIzaSyBbbSrAKPDZccp5Cj5yUFQZWaU5g4irEYA",
             authDomain: "global-chat-526ec.firebaseapp.com",
-            databaseURL: "https://global-chat-526ec-default-rtdb.asia-southeast1.firebasedatabase.app",
+            databaseURL: "https://global-chat-526ec-default-rtdb.asia-southeast1.firebasedatabase.app", // Tambahkan databaseURL
             projectId: "global-chat-526ec",
             storageBucket: "global-chat-526ec.appspot.com",
             messagingSenderId: "974406552674",
@@ -107,35 +215,33 @@
         const database = getDatabase(app);
 
         // DOM Elements
-        const messageInput = document.getElementById('message');
-        const usernameInput = document.getElementById('username');
-        const sendButton = document.getElementById('send');
-        const output = document.getElementById('output');
+        const messageInput = document.querySelector('.message-input input');
+        const sendButton = document.querySelector('.message-input button');
+        const messagesContainer = document.querySelector('.messages');
 
         // Send message to Firebase
         sendButton.addEventListener('click', () => {
-            if (usernameInput.value && messageInput.value) {
+            if (messageInput.value) {
                 const data = {
-                    username: usernameInput.value,
-                    message: messageInput.value
+                    username: "User",  // Assuming a static username for now
+                    message: messageInput.value,
+                    timestamp: new Date().toLocaleTimeString().slice(0, -3),
+                    type: 'sent'
                 };
                 push(ref(database, 'messages'), data);
                 messageInput.value = '';
-            } else {
-                alert('Please enter both username and message');
             }
         });
 
         // Load and display existing messages
         onValue(ref(database, 'messages'), (snapshot) => {
-            output.innerHTML = '';
+            messagesContainer.innerHTML = '';
             snapshot.forEach((childSnapshot) => {
                 const data = childSnapshot.val();
                 const messageElement = document.createElement('div');
-                messageElement.classList.add('message');
-                messageElement.classList.add(data.username === usernameInput.value ? 'user' : 'other');
-                messageElement.innerHTML = '<strong>' + data.username + ':</strong> ' + data.message;
-                output.appendChild(messageElement);
+                messageElement.classList.add('message', data.type);
+                messageElement.innerHTML = `<p>${data.message}</p><span>${data.timestamp}</span>`;
+                messagesContainer.appendChild(messageElement);
             });
         });
 
@@ -143,22 +249,41 @@
         onChildAdded(ref(database, 'messages'), (snapshot) => {
             const data = snapshot.val();
             const messageElement = document.createElement('div');
-            messageElement.classList.add('message');
-            messageElement.classList.add(data.username === usernameInput.value ? 'user' : 'other');
-            messageElement.innerHTML = '<strong>' + data.username + ':</strong> ' + data.message;
-            output.appendChild(messageElement);
+            messageElement.classList.add('message', data.type);
+            messageElement.innerHTML = `<p>${data.message}</p><span>${data.timestamp}</span>`;
+            messagesContainer.appendChild(messageElement);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
         });
     </script>
 </head>
 <body>
-    <div id="chat-container">
-        <div id="chat-window">
-            <div id="output"></div>
+    <div class="container">
+        <div class="sidebar">
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Cari atau mulai chat baru">
+            </div>
+            <div class="contacts" id="contacts">
+                <div class="contact active" data-contact="global-chat">
+                    <div class="avatar"></div>
+                    <div class="contact-info">
+                        <h4>Global Chat</h4>
+                        <p>Start chatting globally</p>
+                    </div>
+                </div>
+                <!-- Add more contacts if needed -->
+            </div>
         </div>
-        <div id="input-container">
-            <input id="username" type="text" placeholder="Enter your name">
-            <input id="message" type="text" placeholder="Enter message">
-            <button id="send">Send</button>
+        <div class="chat-window">
+            <div class="chat-header">
+                <h4 id="chat-header-title">Global Chat</h4>
+            </div>
+            <div class="messages" id="messages">
+                <!-- Messages will be displayed here -->
+            </div>
+            <div class="message-input">
+                <input type="text" placeholder="Ketik pesan" id="message">
+                <button id="send">Send</button>
+            </div>
         </div>
     </div>
 </body>
