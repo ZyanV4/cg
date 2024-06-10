@@ -209,7 +209,7 @@
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getDatabase, ref, push, onChildAdded, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+        import { getDatabase, ref, push, onChildAdded, onValue, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -247,17 +247,35 @@
             document.getElementById('chat-container').style.maxWidth = '1200px';
         }
 
+        // Function to check if a username already exists
+        const checkUsernameExists = async (username) => {
+            const snapshot = await get(ref(database, 'messages'));
+            let usernameExists = false;
+            snapshot.forEach((childSnapshot) => {
+                const data = childSnapshot.val();
+                if (data.username === username) {
+                    usernameExists = true;
+                }
+            });
+            return usernameExists;
+        };
+
         // Set username and save to localStorage
-        document.getElementById('username-submit').addEventListener('click', () => {
+        document.getElementById('username-submit').addEventListener('click', async () => {
             const usernameInput = document.getElementById('username-input').value;
             if (usernameInput) {
-                localStorage.setItem('username', usernameInput);
-                document.getElementById('username-container').style.display = 'none';
-                document.getElementById('chat-container').style.display = 'flex';
-                document.getElementById('chat-container').style.height = '90vh';
-                document.getElementById('chat-container').style.maxHeight = '640px';
-                document.getElementById('chat-container').style.width = '95%';
-                document.getElementById('chat-container').style.maxWidth = '1200px';
+                const exists = await checkUsernameExists(usernameInput);
+                if (exists) {
+                    alert('Username is already taken. Please choose another one.');
+                } else {
+                    localStorage.setItem('username', usernameInput);
+                    document.getElementById('username-container').style.display = 'none';
+                    document.getElementById('chat-container').style.display = 'flex';
+                    document.getElementById('chat-container').style.height = '90vh';
+                    document.getElementById('chat-container').style.maxHeight = '640px';
+                    document.getElementById('chat-container').style.width = '95%';
+                    document.getElementById('chat-container').style.maxWidth = '1200px';
+                }
             } else {
                 alert('Please enter a username');
             }
