@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: #f4f4f4;
+            background: #ece5dd;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -16,33 +16,72 @@
         }
 
         #chat-container {
-            width: 500px;
-            max-width: 100%;
+            width: 90%;
+            max-width: 800px;
+            height: 90vh;
+            max-height: 600px;
+            display: flex;
+            flex-direction: column;
+            background: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
         }
 
         #chat-window {
-            border: 1px solid #ccc;
-            padding: 10px;
-            height: 400px;
+            flex: 1;
+            padding: 20px;
             overflow-y: scroll;
-            background: white;
+            background: #e5ddd5;
         }
 
         #output {
-            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            max-width: 70%;
+            word-wrap: break-word;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: #dcf8c6;
+        }
+
+        .message.other {
+            align-self: flex-start;
+            background: #ffffff;
+        }
+
+        #input-container {
+            display: flex;
+            border-top: 1px solid #ccc;
+            background: #f8f8f8;
+            padding: 10px;
         }
 
         #message, #username, #send {
-            width: 100%;
             padding: 10px;
-            margin: 5px 0;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        #message {
+            flex: 1;
+            border: 1px solid #ccc;
         }
 
         #send {
-            background: #333;
+            background: #34b7f1;
             color: white;
-            border: none;
             cursor: pointer;
+            border: none;
         }
     </style>
     <!-- Tambahkan Firebase SDK -->
@@ -53,9 +92,9 @@
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
-            apiKey: "AIzaSyBbbSrAKPDZccp5Cj5yUFQZWaU5g4irEYA",
+            apiKey: "AIzaSyBbbSrAKPDZccp5Cj5YUFQZWaU5g4irEYA",
             authDomain: "global-chat-526ec.firebaseapp.com",
-            databaseURL: "https://global-chat-526ec-default-rtdb.asia-southeast1.firebasedatabase.app", // Tambahkan databaseURL
+            databaseURL: "https://global-chat-526ec-default-rtdb.asia-southeast1.firebasedatabase.app",
             projectId: "global-chat-526ec",
             storageBucket: "global-chat-526ec.appspot.com",
             messagingSenderId: "974406552674",
@@ -68,21 +107,20 @@
         const database = getDatabase(app);
 
         // DOM Elements
-        const message = document.getElementById('message');
-        const username = document.getElementById('username');
-        const send = document.getElementById('send');
+        const messageInput = document.getElementById('message');
+        const usernameInput = document.getElementById('username');
+        const sendButton = document.getElementById('send');
         const output = document.getElementById('output');
-        const feedback = document.getElementById('feedback');
 
         // Send message to Firebase
-        send.addEventListener('click', () => {
-            if (username.value && message.value) {
+        sendButton.addEventListener('click', () => {
+            if (usernameInput.value && messageInput.value) {
                 const data = {
-                    username: username.value,
-                    message: message.value
+                    username: usernameInput.value,
+                    message: messageInput.value
                 };
                 push(ref(database, 'messages'), data);
-                message.value = '';
+                messageInput.value = '';
             } else {
                 alert('Please enter both username and message');
             }
@@ -93,16 +131,22 @@
             output.innerHTML = '';
             snapshot.forEach((childSnapshot) => {
                 const data = childSnapshot.val();
-                output.innerHTML += '<p><strong>' + data.username + ':</strong> ' + data.message + '</p>';
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message');
+                messageElement.classList.add(data.username === usernameInput.value ? 'user' : 'other');
+                messageElement.innerHTML = '<strong>' + data.username + ':</strong> ' + data.message;
+                output.appendChild(messageElement);
             });
-            feedback.innerHTML = '';
         });
 
         // Listen for new messages
         onChildAdded(ref(database, 'messages'), (snapshot) => {
             const data = snapshot.val();
-            feedback.innerHTML = '';
-            output.innerHTML += '<p><strong>' + data.username + ':</strong> ' + data.message + '</p>';
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message');
+            messageElement.classList.add(data.username === usernameInput.value ? 'user' : 'other');
+            messageElement.innerHTML = '<strong>' + data.username + ':</strong> ' + data.message;
+            output.appendChild(messageElement);
         });
     </script>
 </head>
@@ -110,11 +154,12 @@
     <div id="chat-container">
         <div id="chat-window">
             <div id="output"></div>
-            <div id="feedback"></div>
         </div>
-        <input id="username" type="text" placeholder="Enter your name">
-        <input id="message" type="text" placeholder="Enter message">
-        <button id="send">Send</button>
+        <div id="input-container">
+            <input id="username" type="text" placeholder="Enter your name">
+            <input id="message" type="text" placeholder="Enter message">
+            <button id="send">Send</button>
+        </div>
     </div>
 </body>
 </html>
