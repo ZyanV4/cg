@@ -33,6 +33,8 @@
             --warna_20: #ddd;
             --warna_21: #262432;
             --warna_22: #580190;
+
+            --body_background: #0f0f0f;
             
             --bs-00: 0 0 0rem #000;
             --bs-01: 0 0 0.1rem #000;
@@ -135,6 +137,7 @@
             -webkit-text-size-adjust: 100%;
         }
         body {
+            background: var(--body_background);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -142,21 +145,7 @@
             margin: 0;
             font-size: 14px;
             letter-spacing: .5px;
-            caret-color: var(--warna_3) !important;
-        }
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url(https://zyanv4.my.id/assets/images/UNGU.jpg);
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            background-size: cover;
-            filter: brightness(.4);
-            z-index: -1;
+            caret-color: var(--warna_3);
         }
         ::selection {
             background: var(--warna_3);
@@ -169,12 +158,14 @@
         }
         /* Track */
         ::-webkit-scrollbar-track {
-            background: var(--warna_16); 
+            background: #eee; 
+            border-radius: 6px;
         }
         /* Handle */
         ::-webkit-scrollbar-thumb {
             background: var(--warna_3);
             height: 32px;
+            border-radius: 6px;
         }
         /* Handle on hover */
         ::-webkit-scrollbar-thumb:hover {
