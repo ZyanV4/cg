@@ -99,7 +99,6 @@
             overflow: hidden;
             margin: 0 auto;
         }
-
         #chat-window {
             flex: 1;
             padding: 20px;
@@ -107,12 +106,10 @@
             background: var(--section_background);
             z-index: 1;
         }
-
         #output {
             display: flex;
             flex-direction: column;
         }
-
         .message {
             margin-bottom: 15px;
             padding: 8px 15px;
@@ -120,19 +117,16 @@
             max-width: 70%;
             word-wrap: break-word;
         }
-
         .message.user {
             align-self: flex-end;
             background: var(--warna_3);
             color: white;
         }
-
         .message.other {
             align-self: flex-start;
             background: #353535;
             color: white;
         }
-
         #input-container {
             display: flex;
             border-top: 1px solid transparent;
@@ -143,7 +137,6 @@
             align-items: center;
             justify-content: center;
         }
-
         #message {
             flex: 1;
             padding: 10px 15px;
@@ -154,7 +147,6 @@
             background: var(--body_background);
             color: white;
         }
-
         #kirim {
             color: white;
             cursor: pointer;
@@ -170,7 +162,6 @@
             padding: 10px 25px;
             margin: 5px;
         }
-
         /* Nama pengguna container */
         #username-container {
             display: flex;
@@ -184,7 +175,6 @@
             top: 0;
             left: 0;
         }
-
         #username-input {
             padding: 10px 15px;
             border: none;
@@ -192,7 +182,6 @@
             margin-bottom: 10px;
             font-size: 1rem;
         }
-
         #username-submit {
             color: white;
             cursor: pointer;
@@ -206,7 +195,6 @@
             font-weight: 700;
             padding: 10px 25px;
         }
-
         /* Reply container */
         .reply-container {
             display: none;
@@ -216,18 +204,15 @@
             margin-bottom: 10px;
             color: white;
         }
-
         .reply-message {
             font-weight: bold;
             font-size: 0.9rem;
         }
-
         .cancel-reply {
             float: right;
             cursor: pointer;
             color: red;
         }
-
     </style>
     <!-- Tambahkan Firebase SDK -->
     <script type="module">
