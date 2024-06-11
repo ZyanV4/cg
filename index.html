@@ -171,6 +171,22 @@
             margin: 5px;
         }
 
+        #reset {
+            color: white;
+            cursor: pointer;
+            border: none;
+            filter: drop-shadow(0px 0px 37.6px var(--warna_14));
+            background: var(--warna_14);
+            border-color: var(--warna_14);
+            font-size: .875rem;
+            text-transform: capitalize;
+            border-radius: 8px;
+            box-shadow: 0px 0px 20.6px var(--warna_14);
+            font-weight: 700;
+            padding: 10px 25px;
+            margin: 5px;
+        }
+
         /* Nama pengguna container */
         #username-container {
             display: flex;
@@ -233,7 +249,7 @@
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getDatabase, ref, push, onChildAdded, onValue, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+        import { getDatabase, ref, push, onChildAdded, onValue, get, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -242,183 +258,88 @@
             databaseURL: "https://global-chat-526ec-default-rtdb.asia-southeast1.firebasedatabase.app",
             projectId: "global-chat-526ec",
             storageBucket: "global-chat-526ec.appspot.com",
-            messagingSenderId: "974406552674",
-            appId: "1:974406552674:web:7423d0813a675ada28953b",
-            measurementId: "G-9BQWE43K1C"
+            messagingSenderId: "150505197846",
+            appId: "1:150505197846:web:805e18b6fcbeb3e08ad308"
         };
 
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
+        const db = getDatabase(app);
 
-        // DOM Elements
-        const messageInput = document.getElementById('message');
-        const kirimButton = document.getElementById('kirim');
-        const output = document.getElementById('output');
-        const replyContainer = document.getElementById('reply-container');
-        const replyMessageElement = document.getElementById('reply-message');
-        const cancelReplyButton = document.getElementById('cancel-reply');
+        document.addEventListener("DOMContentLoaded", function() {
+            const messageInput = document.getElementById("message");
+            const kirimButton = document.getElementById("kirim");
+            const resetButton = document.getElementById("reset");
+            const chatWindow = document.getElementById("chat-window");
+            const output = document.getElementById("output");
+            const usernameContainer = document.getElementById("username-container");
+            const usernameInput = document.getElementById("username-input");
+            const usernameSubmit = document.getElementById("username-submit");
 
-        let replyMessageId = null;
-        let replyMessageData = null;
+            let username = '';
 
-        // Check if username exists in localStorage
-        const username = localStorage.getItem('username');
-
-        if (!username) {
-            // Show username input if not set
-            document.getElementById('username-container').style.display = 'flex';
-        } else {
-            // Show chat container if username is set
-            document.getElementById('chat-container').style.display = 'flex';
-            document.getElementById('chat-container').style.height = '90vh';
-            document.getElementById('chat-container').style.maxHeight = '640px';
-            document.getElementById('chat-container').style.width = '95%';
-            document.getElementById('chat-container').style.maxWidth = '1200px';
-        }
-
-        // Function to check if a username already exists
-        const checkUsernameExists = async (username) => {
-            const snapshot = await get(ref(database, 'messages'));
-            let usernameExists = false;
-            snapshot.forEach((childSnapshot) => {
-                const data = childSnapshot.val();
-                if (data.username === username) {
-                    usernameExists = true;
+            usernameSubmit.addEventListener("click", function() {
+                username = usernameInput.value.trim();
+                if (username !== "") {
+                    usernameContainer.style.display = "none";
                 }
             });
-            return usernameExists;
-        };
 
-        // Set username and save to localStorage
-        document.getElementById('username-submit').addEventListener('click', async () => {
-            const usernameInput = document.getElementById('username-input').value;
-            if (usernameInput) {
-                const exists = await checkUsernameExists(usernameInput);
-                if (exists) {
-                    alert('Username is already taken. Please choose another one.');
-                } else {
-                    localStorage.setItem('username', usernameInput);
-                    document.getElementById('username-container').style.display = 'none';
-                    document.getElementById('chat-container').style.display = 'flex';
-                    document.getElementById('chat-container').style.height = '90vh';
-                    document.getElementById('chat-container').style.maxHeight = '640px';
-                    document.getElementById('chat-container').style.width = '95%';
-                    document.getElementById('chat-container').style.maxWidth = '1200px';
+            kirimButton.addEventListener("click", function() {
+                const message = messageInput.value.trim();
+                if (message !== "") {
+                    push(ref(db, "messages"), {
+                        message: message,
+                        sender: username,
+                        timestamp: new Date().toISOString()
+                    });
+                    messageInput.value = "";
                 }
-            } else {
-                alert('Please enter a username');
-            }
-        });
+            });
 
-        // Send message to Firebase
-        kirimButton.addEventListener('click', () => {
-            if (messageInput.value) {
-                const data = {
-                    username: localStorage.getItem('username'),
-                    message: messageInput.value,
-                    replyTo: replyMessageData
-                };
-                push(ref(database, 'messages'), data);
-                messageInput.value = '';
-                replyMessageId = null;
-                replyMessageData = null;
-                replyContainer.style.display = 'none';
-            } else {
-                alert('Please enter a message');
-            }
-        });
-
-        // Load and display existing messages
-        onValue(ref(database, 'messages'), (snapshot) => {
-            output.innerHTML = '';
-            snapshot.forEach((childSnapshot) => {
-                const data = childSnapshot.val();
-                const messageElement = document.createElement('div');
-                messageElement.classList.add('message');
-                messageElement.classList.add(data.username === localStorage.getItem('username') ? 'user' : 'other');
-                messageElement.innerHTML = '<strong>' + data.username + ':</strong> ' + data.message;
-
-                if (data.replyTo) {
-                    const replyElement = document.createElement('div');
-                    replyElement.classList.add('reply-message');
-                    replyElement.innerText = 'Replying to: ' + data.replyTo.message;
-                    messageElement.appendChild(replyElement);
-                }
-
-                messageElement.addEventListener('click', () => {
-                    replyMessageId = childSnapshot.key;
-                    replyMessageData = { message: data.message, username: data.username };
-                    replyMessageElement.innerText = 'Replying to: ' + data.message;
-                    replyContainer.style.display = 'block';
+            resetButton.addEventListener("click", function() {
+                const messagesRef = ref(db, "messages");
+                get(messagesRef).then((snapshot) => {
+                    snapshot.forEach((childSnapshot) => {
+                        remove(childSnapshot.ref);
+                    });
                 });
+            });
 
+            messageInput.addEventListener("keypress", function(event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    kirimButton.click();
+                }
+            });
+
+            onChildAdded(ref(db, "messages"), function(snapshot) {
+                const data = snapshot.val();
+                const messageElement = document.createElement("div");
+                messageElement.classList.add("message", data.sender === username ? "user" : "other");
+                messageElement.textContent = `${data.sender}: ${data.message}`;
                 output.appendChild(messageElement);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
             });
         });
-
-        // Listen for new messages
-        onChildAdded(ref(database, 'messages'), (snapshot) => {
-            const data = snapshot.val();
-            const messageElement = document.createElement('div');
-            messageElement.classList.add('message');
-            messageElement.classList.add(data.username === localStorage.getItem('username') ? 'user' : 'other');
-            messageElement.innerHTML = '<strong>' + data.username + ':</strong> ' + data.message;
-
-            if (data.replyTo) {
-                const replyElement = document.createElement('div');
-                replyElement.classList.add('reply-message');
-                replyElement.innerText = 'Replying to: ' + data.replyTo.message;
-                messageElement.appendChild(replyElement);
-            }
-
-            messageElement.addEventListener('click', () => {
-                replyMessageId = snapshot.key;
-                replyMessageData = { message: data.message, username: data.username };
-                replyMessageElement.innerText = 'Replying to: ' + data.message;
-                replyContainer.style.display = 'block';
-            });
-
-            output.appendChild(messageElement);
-        });
-
-        // Cancel reply
-        cancelReplyButton.addEventListener('click', () => {
-            replyMessageId = null;
-            replyMessageData = null;
-            replyContainer.style.display = 'none';
-        });
-
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js" type="text/javascript"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 </head>
 <body>
-    <main class="banbackanimation">
-        <object id="particle">
-            <div id="stars"></div>
-            <div id="stars2"></div>
-            <div id="stars3"></div>
-        </object>
-        <section class="chatsection">
-            <div id="chat-container" style="display: none;">
-                <div id="chat-window">
-                    <div id="output"></div>
-                </div>
-                <div id="input-container">
-                    <div id="reply-container" class="reply-container">
-                        <span id="reply-message" class="reply-message"></span>
-                        <span id="cancel-reply" class="cancel-reply">Cancel</span>
-                    </div>
-                    <input id="message" type="text" placeholder="Enter message">
-                    <button id="kirim">kirim</button>
-                </div>
+    <div id="username-container">
+        <input type="text" id="username-input" placeholder="Enter your name">
+        <button id="username-submit">Join Chat</button>
+    </div>
+    <div class="chatsection">
+        <div id="chat-container">
+            <div id="chat-window">
+                <div id="output"></div>
             </div>
-            <div id="username-container" style="display: none;">
-                <input id="username-input" type="text" placeholder="Enter your name">
-                <button id="username-submit">Submit</button>
+            <div id="input-container">
+                <input type="text" id="message" placeholder="Type your message...">
+                <button id="kirim">Send</button>
+                <button id="reset">Reset</button>
             </div>
-        </section>
-    </main>
+        </div>
+    </div>
 </body>
 </html>
