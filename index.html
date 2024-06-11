@@ -330,7 +330,7 @@
         });
 
         // Load and display existing messages
-        const displayMessages = (snapshot) => {
+        onValue(ref(database, 'messages'), (snapshot) => {
             output.innerHTML = '';
             snapshot.forEach((childSnapshot) => {
                 const data = childSnapshot.val();
@@ -355,14 +355,7 @@
 
                 output.appendChild(messageElement);
             });
-            // Scroll to the latest message
-            const lastMessage = output.lastElementChild;
-            if (lastMessage) {
-                lastMessage.scrollIntoView();
-            }
-        };
-
-        onValue(ref(database, 'messages'), displayMessages);
+        });
 
         // Listen for new messages
         onChildAdded(ref(database, 'messages'), (snapshot) => {
@@ -387,8 +380,6 @@
             });
 
             output.appendChild(messageElement);
-            // Scroll to the latest message
-            messageElement.scrollIntoView();
         });
 
         // Cancel reply
